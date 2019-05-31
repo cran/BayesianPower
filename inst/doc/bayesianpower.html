@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Fayette Klaassen" />
+
+
+<title>BayesianPower</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">BayesianPower</h1>
+<h4 class="author">Fayette Klaassen</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><em>BayesianPower</em> can be used for sample size determination (using <code>bayes_sampsize</code>) and power calculation (using <code>bayes_power</code>) when Bayes factors are used to compare an inequality constrained hypothesis <span class="math inline">\(H_i\)</span> to its complement <span class="math inline">\(H_c\)</span>, another inequality constrained hypothesis <span class="math inline">\(H_j\)</span> or the unconstrained hypothesis <span class="math inline">\(H_u\)</span>. Power is defined as a combination of controlled error probabilities. The unconditional or conditional error probabilities can be controlled. Four approaches to control these probabilities are available in the methods of this package. <strong>Users are advised to read this vignette and the paper available at <a href="https://doi.org/10.17605/OSF.IO/D9EAJ">10.17605/OSF.IO/D9EAJ</a> where the four available approaches are presented in detail (Klaassen, Hoijtink &amp; Gu, unpublished)).</strong></p>
+</div>
+<div id="power-calculation-with-bayes_power" class="section level2">
+<h2>Power calculation with <code>bayes_power()</code></h2>
+<p><code>bayes_power(n, h1, h2, m1, m2,   ngroup = NULL, comp = NULL,   bound1 = 1, bound2 = 1/bound1,   datasets = 1000, nsamp = 1000,   seed = NULL)</code></p>
+<div id="arguments" class="section level3">
+<h3>Arguments</h3>
+<p><code>n</code> A number. The sample size for which the error probabilities must be computed.</p>
+<p><code>h1</code> A constraint matrix defining H1, see below for more details.</p>
+<p><code>h2</code> A constraint matrix defining H2, or a character <code>&#39;u&#39;</code> or <code>&#39;c&#39;</code> for the unconstrained or complement hypothesis.</p>
+<p><code>m1</code> A vector of expected population means under H1 (standardized), see below for more details.</p>
+<p><code>m2</code> A vector of expected populations means under H2 (standardized). <code>m2</code> must be of same length as <code>m1</code>.</p>
+<p><code>ngroup</code> A number or <code>NULL</code> . The number of groups. If <code>NULL</code> the number of groups is determined from the length of <code>m1</code>.</p>
+<p><code>comp</code> A vector or <code>NULL</code> . The complexity of H1 and H2. If <code>NULL</code> the complexity is estimated. See below for more details.</p>
+<p><code>bound1</code> A number. The boundary above which BF12 favors H1, see below for more details.</p>
+<p><code>bound2</code> A number. The boundary below which BF12 favors H2.</p>
+<p><code>datasets</code> A number. The number of datasets to simulate to compute the error probabilities</p>
+<p><code>nsamp</code> A number. The number of prior or posterior samples to determine the complexity or fit.</p>
+<p><code>seed</code> A number. The random seed to be set.</p>
+</div>
+<div id="details" class="section level3">
+<h3>Details</h3>
+<div id="specifying-hypotheses" class="section level4">
+<h4>Specifying hypotheses</h4>
+<p>Hypotheses are defined by means of a constraint matrix, that specifies the ordered constraints between the means <span class="math inline">\(\boldsymbol\mu\)</span> using a constraint matrix <span class="math inline">\(R\)</span>, such that <span class="math inline">\(R \boldsymbol{\mu} &gt; \bf{0}\)</span>, where <span class="math inline">\(R\)</span> is a matrix with <span class="math inline">\(J\)</span> columns and <span class="math inline">\(K\)</span> rows, where <span class="math inline">\(J\)</span> is the number of group means and <span class="math inline">\(K\)</span> is the number of constraints between the means, <span class="math inline">\(\boldsymbol\mu\)</span> is a vector of <span class="math inline">\(J\)</span> means and <span class="math inline">\(\bf{0}\)</span> is a vector of <span class="math inline">\(K\)</span> zeros. The constraint matrix <span class="math inline">\(R\)</span> contains a set of linear inequality constraints.</p>
+<p>Consider</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">R &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2">mu &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">4</span>, <span class="fl">.2</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4">R</a></code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1   -1    0
+## [2,]    0    1   -1</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">mu</a></code></pre></div>
+<pre><code>## [1] 0.4 0.2 0.0</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">R <span class="op">%*%</span><span class="st"> </span>mu</a></code></pre></div>
+<pre><code>##      [,1]
+## [1,]  0.2
+## [2,]  0.2</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">(R <span class="op">%*%</span><span class="st"> </span>mu) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<pre><code>##      [,1]
+## [1,] TRUE
+## [2,] TRUE</code></pre>
+<p>The matrix <span class="math inline">\(R\)</span> specifies that the sum of <span class="math inline">\(1 \times \mu_1\)</span> and <span class="math inline">\(-1 \times \mu_2\)</span> and <span class="math inline">\(0 \times \mu_3\)</span> is larger than <span class="math inline">\(0\)</span>, <strong>and</strong> the sum of <span class="math inline">\(0 \times \mu_1\)</span> and <span class="math inline">\(1 \times \mu_2\)</span> and <span class="math inline">\(-1 \times \mu_3\)</span> is larger than <span class="math inline">\(0\)</span>. This can also be written as: <span class="math inline">\(\mu_1 &gt; \mu_2 &gt; \mu_3\)</span>. For more information about the specification of constraint matrices, see for example <span class="citation">[@hoijtink12book]</span>.</p>
+<p>The argument <code>h1</code> has to be a constraint matrix as specified above. The argument <code>h2</code> can be either a constraint matrix, or the character <code>&#39;u&#39;</code> or <code>&#39;c&#39;</code> if the goal is to compare <span class="math inline">\(H_1\)</span> with <span class="math inline">\(H_u\)</span>, the unconstrained hypothesis, or <span class="math inline">\(H_c\)</span> the complement hypothesis.</p>
+</div>
+<div id="specifying-population-means" class="section level4">
+<h4>Specifying population means</h4>
+<p>Hypothesized population means have to be defined under <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, also if <span class="math inline">\(H_u\)</span> or <span class="math inline">\(H_c\)</span> are considered as <span class="math inline">\(H_2\)</span>. The population means have to be standardized.</p>
+</div>
+<div id="computing-complexity" class="section level4">
+<h4>Computing complexity</h4>
+<p>If the complexity of a hypothesis is known it can be specified under <code>comp</code> to reduce computational time. If <code>comp = NULL</code> the complexity is sampled using <span class="math inline">\(\mu_{\cdot} \sim \mathcal{N}(0,1000)\)</span> as a prior distribution for each mean, that is, a normal distribution with mean <span class="math inline">\(0\)</span> and standard deviation <span class="math inline">\(1000\)</span>.</p>
+</div>
+<div id="setting-bounds" class="section level4">
+<h4>Setting bounds</h4>
+<p><code>bound1</code> and <code>bound2</code> describe the boundary used for interpreting a Bayes factor. If <code>bound1 = 1</code>, all <span class="math inline">\(BF_{12} &gt; 1\)</span> are considered to express evidence in favor of <span class="math inline">\(H_1\)</span>, if <code>bound1 = 3</code>, all <span class="math inline">\(BF_{12} &gt; 3\)</span> are considered to express evidence in favor of <span class="math inline">\(H_1\)</span>. Similarly, <code>bound2</code> is the boundary <em>below</em> which <span class="math inline">\(BF_{12}\)</span> is considered to express evidence in favor of <span class="math inline">\(H_2\)</span>.</p>
+</div>
+</div>
+<div id="examples" class="section level3">
+<h3>Examples</h3>
+<div id="example-1.-h_1-vs-h_c" class="section level4">
+<h4>Example 1. <span class="math inline">\(H_1\)</span> vs <span class="math inline">\(H_c\)</span></h4>
+<p>An example where three group means are ordered in <span class="math inline">\(H_1: \mu_1 &gt; \mu_2 &gt; \mu_3\)</span> which is compared to its complement. The power is determined for <span class="math inline">\(n = 40\)</span></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">h1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>), <span class="dt">nrow=</span> <span class="dv">2</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2">h2 &lt;-<span class="st"> &#39;c&#39;</span></a>
+<a class="sourceLine" id="cb9-3" title="3">m1 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">4</span>,.<span class="dv">2</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb9-4" title="4">m2 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">2</span>,<span class="dv">0</span>,.<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="kw">bayes_power</span>(<span class="dv">40</span>, m1, m2, h1, h2)</a></code></pre></div>
+</div>
+<div id="example-2.-h1-vs-h2" class="section level4">
+<h4>Example 2. H1 vs H2</h4>
+<p>An example where four group means are ordered in <span class="math inline">\(H_1: \mu_1 &gt; \mu_2 &gt; \mu_3 &gt; \mu_4\)</span> and in <span class="math inline">\(H_2: \mu_3 &gt; \mu_2 &gt; \ mu_4 &gt; \mu_1\)</span>. Only Bayes factors larger than <span class="math inline">\(3\)</span> are considered evidence in favor of <span class="math inline">\(H_1\)</span> and only Bayes factors smaller than <span class="math inline">\(1/3\)</span> are considered evidence in favor of <span class="math inline">\(H_2\)</span>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">h1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>), <span class="dt">nrow=</span> <span class="dv">3</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2">h2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb10-3" title="3">m1 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">7</span>,.<span class="dv">3</span>,.<span class="dv">1</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb10-4" title="4">m2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,.<span class="dv">4</span>,.<span class="dv">5</span>,.<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="kw">bayes_power</span>(<span class="dv">34</span>, h1, h2, m1, m2, <span class="dt">bound1 =</span> <span class="dv">3</span>, <span class="dt">bound2 =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)</a></code></pre></div>
+</div>
+</div>
+</div>
+<div id="sample-size-determination-with-bayes_sampsize" class="section level2">
+<h2>Sample size determination with <code>bayes_sampsize()</code></h2>
+<p><code>bayes_sampsize(m1, m2, h1, h2,   type = 1, cutoff, bound1 = 1, bound2 = 1 / bound1,   datasets = 1000, nsamp = 1000,   minss = 2, maxss = 1000, seed = 31)</code></p>
+<div id="arguments-1" class="section level3">
+<h3>Arguments</h3>
+<p>The arguments are the same as for <code>bayes_power()</code> with the addition of:</p>
+<p><code>type</code>A character. The type of error to be controlled. The options are: <code>&quot;1&quot;, &quot;2&quot;, &quot;de&quot;, &quot;aoi&quot;, &quot;med.1&quot;, &quot;med.2&quot;</code>. See below for more details.</p>
+<p><code>cutoff</code> A number. The cutoff criterion for type. If <code>type</code> is <code>&quot;1&quot;, &quot;2&quot;, &quot;de&quot;, &quot;aoi&quot;</code>, <code>cutoff</code> must be between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. If <code>type</code> is <code>&quot;med.1&quot;</code> or <code>&quot;med.2&quot;</code>, <code>cutoff</code> must be larger than <span class="math inline">\(1\)</span>. See below for more details.</p>
+<p><code>minss</code> A number. The minimum sample size.</p>
+<p><code>maxss</code> A number. The maximum sample size.</p>
+</div>
+<div id="details-1" class="section level3">
+<h3>Details</h3>
+<p><code>bayes_sampsize()</code> iteratively uses <code>bayes_power()</code> to determine the error probabilities for a sample size, evaluates whether the chosen error is below the cutoff, and adjusts the sample size.</p>
+<div id="type" class="section level4">
+<h4><code>type</code></h4>
+<p><span class="citation">[@klaassenPIH]</span> describes in detail the different types of controlling error probabilities that can be considered. Specifying <code>&quot;1&quot;</code> or <code>&quot;2&quot;</code> indicates that the Type 1 or Type 2 error probability has to be controlled, respectively the probability of concluding <span class="math inline">\(H_2\)</span> is the best hypothesis when <span class="math inline">\(H_1\)</span> is true or concluding that <span class="math inline">\(H_1\)</span> is the best hypothesis when <span class="math inline">\(H_2\)</span> is true. Note that when <span class="math inline">\(H_1\)</span> or <span class="math inline">\(H_2\)</span> is considered the best hypothesis depends on the values chosen for <code>bound1</code> and <code>bound2</code>. Specifying <code>&quot;de&quot;</code> or <code>&quot;aoi&quot;</code> indicates that the Decision error probability (average of Type 1 and Type 2) or the probability of Indecision has to be controlled. Finally, specifying <code>&quot; med.1&quot;</code> or <code>&quot;med.2&quot;</code> indicates the minimum desired median <span class="math inline">\(BF_{12}\)</span> when <span class="math inline">\(H_1\)</span> is true, or the minimum desired median <span class="math inline">\(BF_{21}\)</span> when <span class="math inline">\(H_2\)</span> is true.</p>
+</div>
+</div>
+<div id="examples-1" class="section level3">
+<h3>Examples</h3>
+<div id="example-1.-h_1-versus-h_c-controlling-decision-error" class="section level4">
+<h4>Example 1. <span class="math inline">\(H_1\)</span> versus <span class="math inline">\(H_c\)</span>, controlling decision error</h4>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">h1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb11-2" title="2">               <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">-1</span>), </a>
+<a class="sourceLine" id="cb11-3" title="3">             <span class="dt">nrow=</span> <span class="dv">2</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb11-4" title="4">h2 &lt;-<span class="st"> &#39;c&#39;</span></a>
+<a class="sourceLine" id="cb11-5" title="5">m1 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">4</span>, <span class="fl">.2</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb11-6" title="6">m2 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">2</span>, <span class="dv">0</span>, <span class="fl">.1</span>)</a>
+<a class="sourceLine" id="cb11-7" title="7"><span class="kw">bayes_sampsize</span>(h1, h2, m1, m2, <span class="dt">type =</span> <span class="st">&quot;de&quot;</span>, <span class="dt">cutoff =</span> <span class="fl">.125</span>)</a></code></pre></div>
+</div>
+<div id="example-2.-h1-versus-h2-controlling-indecision-error" class="section level4">
+<h4>Example 2. H1 versus H2, controlling indecision error</h4>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">h1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb12-2" title="2">               <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb12-3" title="3">               <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">-1</span>), </a>
+<a class="sourceLine" id="cb12-4" title="4">             <span class="dt">nrow=</span> <span class="dv">3</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-5" title="5">h2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb12-6" title="6">               <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">-1</span>,</a>
+<a class="sourceLine" id="cb12-7" title="7">               <span class="dv">-1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb12-8" title="8">             <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-9" title="9">m1 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">7</span>, <span class="fl">.3</span>, <span class="fl">.1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb12-10" title="10">m2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">.4</span>, <span class="fl">.5</span>, <span class="fl">.1</span>)</a>
+<a class="sourceLine" id="cb12-11" title="11"><span class="kw">bayes_sampsize</span>(h1, h2, m1, m2, <span class="dt">type =</span> <span class="st">&quot;aoi&quot;</span>, <span class="dt">cutoff =</span> <span class="fl">.2</span>, <span class="dt">minss =</span> <span class="dv">2</span>, <span class="dt">maxss =</span> <span class="dv">500</span>)</a></code></pre></div>
+</div>
+<div id="example-3.-h_1-versus-h_u-controlling-median-bayes-factor" class="section level4">
+<h4>Example 3. <span class="math inline">\(H_1\)</span> versus <span class="math inline">\(H_u\)</span>, controlling median Bayes factor</h4>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">h1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb13-2" title="2">               <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb13-3" title="3">               <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">-1</span>), </a>
+<a class="sourceLine" id="cb13-4" title="4">             <span class="dt">nrow=</span> <span class="dv">3</span>, <span class="dt">byrow=</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb13-5" title="5">h2 &lt;-<span class="st"> &#39;u&#39;</span></a>
+<a class="sourceLine" id="cb13-6" title="6">m1 &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">3</span>, <span class="fl">.2</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb13-7" title="7">m2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="kw">bayes_sampsize</span>(h1, h2, m1, m2, <span class="dt">type =</span> <span class="st">&quot;med.1&quot;</span>, <span class="dt">cutoff =</span> <span class="dv">3</span>, <span class="dt">minss =</span> <span class="dv">2</span>, <span class="dt">maxss =</span> <span class="dv">500</span>)</a></code></pre></div>
+</div>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Hoijtink, H. (2012). <em>Informative hypotheses. Theory and practice for behavioral and social scientists.</em> Boca Raton: Chapman Hall/CRC.</p>
+<p>Klaassen, F., Hoijtink, H., Gu, X. (unpublished). <em>The power of informative hypotheses.</em> Pre-print available at <a href="https://doi.org/10.17605/OSF.IO/D9EAJ">https://doi.org/10.17605/OSF.IO/D9EAJ</a></p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
