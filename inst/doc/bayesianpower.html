@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Fayette Klaassen" />
 
@@ -95,7 +95,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -116,9 +116,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +284,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -311,7 +309,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="power-calculation-with-bayes_power" class="section level2">
 <h2>Power calculation with <code>bayes_power()</code></h2>
-<p><code>bayes_power(n, h1, h2, m1, m2,   ngroup = NULL, comp = NULL,   bound1 = 1, bound2 = 1/bound1,   datasets = 1000, nsamp = 1000,   seed = NULL)</code></p>
+<p><code>bayes_power(n, h1, h2, m1, m2, sd1=1, sd2=1,   ngroup = NULL, scale = 1000,   bound1 = 1, bound2 = 1/bound1,   datasets = 1000, nsamp = 1000,   seed = NULL)</code></p>
 <div id="arguments" class="section level3">
 <h3>Arguments</h3>
 <p><code>n</code> A number. The sample size for which the error probabilities must be computed.</p>
@@ -319,8 +317,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p><code>h2</code> A constraint matrix defining H2, or a character <code>&#39;u&#39;</code> or <code>&#39;c&#39;</code> for the unconstrained or complement hypothesis.</p>
 <p><code>m1</code> A vector of expected population means under H1 (standardized), see below for more details.</p>
 <p><code>m2</code> A vector of expected populations means under H2 (standardized). <code>m2</code> must be of same length as <code>m1</code>.</p>
+<p><code>sd1</code> A vector of standard deviations under H1. Must be a single number (equal standard deviation under all populations), or a vector of the same length as <code>m1</code></p>
+<p><code>sd2</code> A vector of standard deviations under H2. Must be a single number (equal standard deviation under all populations), or a vector of the same length as <code>m2</code></p>
 <p><code>ngroup</code> A number or <code>NULL</code> . The number of groups. If <code>NULL</code> the number of groups is determined from the length of <code>m1</code>.</p>
-<p><code>comp</code> A vector or <code>NULL</code> . The complexity of H1 and H2. If <code>NULL</code> the complexity is estimated. See below for more details.</p>
+<p><code>scale</code> A number or use the default <code>1000</code> to set the prior scale.</p>
 <p><code>bound1</code> A number. The boundary above which BF12 favors H1, see below for more details.</p>
 <p><code>bound2</code> A number. The boundary below which BF12 favors H2.</p>
 <p><code>datasets</code> A number. The number of datasets to simulate to compute the error probabilities</p>
@@ -355,11 +355,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="specifying-population-means" class="section level4">
 <h4>Specifying population means</h4>
-<p>Hypothesized population means have to be defined under <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, also if <span class="math inline">\(H_u\)</span> or <span class="math inline">\(H_c\)</span> are considered as <span class="math inline">\(H_2\)</span>. The population means have to be standardized.</p>
+<p>Hypothesized population means have to be defined under <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, also if <span class="math inline">\(H_u\)</span> or <span class="math inline">\(H_c\)</span> are considered as <span class="math inline">\(H_2\)</span>. The population means can be standardized, or, alternatively, the group specific standard deviations can be set under <code>sd1</code> and <code>sd2</code>.</p>
 </div>
-<div id="computing-complexity" class="section level4">
-<h4>Computing complexity</h4>
-<p>If the complexity of a hypothesis is known it can be specified under <code>comp</code> to reduce computational time. If <code>comp = NULL</code> the complexity is sampled using <span class="math inline">\(\mu_{\cdot} \sim \mathcal{N}(0,1000)\)</span> as a prior distribution for each mean, that is, a normal distribution with mean <span class="math inline">\(0\)</span> and standard deviation <span class="math inline">\(1000\)</span>.</p>
+<div id="prior-scale" class="section level4">
+<h4>Prior scale</h4>
+<p>The prior scale can be set using <code>scale</code>. By default, a scale of <code>1000</code> is used. This implies that the prior covariance matrix is proportional to the standard errors of the sampled data, by a factor of <code>1000</code>.</p>
 </div>
 <div id="setting-bounds" class="section level4">
 <h4>Setting bounds</h4>
@@ -390,7 +390,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="sample-size-determination-with-bayes_sampsize" class="section level2">
 <h2>Sample size determination with <code>bayes_sampsize()</code></h2>
-<p><code>bayes_sampsize(m1, m2, h1, h2,   type = 1, cutoff, bound1 = 1, bound2 = 1 / bound1,   datasets = 1000, nsamp = 1000,   minss = 2, maxss = 1000, seed = 31)</code></p>
+<p><code>bayes_sampsize(h1, h2, m1, m2, sd1 = 1, sd2 = 1, scale = 1000,   type = 1, cutoff, bound1 = 1, bound2 = 1 / bound1,   datasets = 1000, nsamp = 1000,   minss = 2, maxss = 1000, seed = 31)</code></p>
 <div id="arguments-1" class="section level3">
 <h3>Arguments</h3>
 <p>The arguments are the same as for <code>bayes_power()</code> with the addition of:</p>
@@ -452,6 +452,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>Klaassen, F., Hoijtink, H., Gu, X. (unpublished). <em>The power of informative hypotheses.</em> Pre-print available at <a href="https://doi.org/10.17605/OSF.IO/D9EAJ">https://doi.org/10.17605/OSF.IO/D9EAJ</a></p>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
