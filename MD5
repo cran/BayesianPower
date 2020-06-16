@@ -1,14 +1,14 @@
-30c9cf0059e841a774b8d364e18f6d29 *DESCRIPTION
+509d4f10c36d367e3efb60d2729661ac *DESCRIPTION
 8107397754d7ba65a78190b02a8c8dc8 *NAMESPACE
-0120d2238b584a390d64660a8718cc74 *NEWS.md
-631a85abc002f16ca48d2212aeaf7245 *R/power_sampsize.R
-7dcc1df4bb0dcfd7328dca5b7d8d0288 *R/utils.R
+6a7f9abd1d52a66961f55005fd04c529 *NEWS.md
+7611c0ae6345062d203cf0b248ed718f *R/power_sampsize.R
+7e42fe22dd8da67f81187c177d696e84 *R/utils.R
 f8fdf57138d64cfed7f53b49d3ae0880 *build/vignette.rds
 37db0235dde4d34d38e5e55fb0631ded *inst/doc/bayesianpower.R
-f2af04538227dbbc77a61e0a562bef6f *inst/doc/bayesianpower.Rmd
-a2436b2f76b201ec7988fc5e98418799 *inst/doc/bayesianpower.html
+8eb71558e7bc6f1c273adf80d7c1b2ca *inst/doc/bayesianpower.Rmd
+92747754521d34644a8d0775979e62eb *inst/doc/bayesianpower.html
 f360a6d6613ef7d23d17cc706895da46 *man/bayes_error.Rd
-149e5fdf77f66a58593a5bd1db9e99f7 *man/bayes_power.Rd
+f82bc7763287dd908da1e1940f6b4d0c *man/bayes_power.Rd
 7cc7b5f81b9db24e3d913e399a11be80 *man/bayes_sampsize.Rd
 7f79ebe12fd871e678730524c3643847 *man/calc_bf.Rd
 7211c3a626b6efaf0e8e1c887b076b1d *man/calc_fc.Rd
@@ -17,4 +17,4 @@ cdae31228cdd4afb6035b72e1f914a4b *man/samp_bf.Rd
 0a41576ab27d372c00b79ad1f374d4f8 *man/samp_dist.Rd
 fc5fbf07b03b44d7a3d7962c5883d240 *tests/testthat.R
 623f61982496b9983c33ca301f1a7d09 *tests/testthat/test_bayespower.R
-f2af04538227dbbc77a61e0a562bef6f *vignettes/bayesianpower.Rmd
+8eb71558e7bc6f1c273adf80d7c1b2ca *vignettes/bayesianpower.Rmd

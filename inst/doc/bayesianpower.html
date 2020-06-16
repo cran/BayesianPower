@@ -309,7 +309,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="power-calculation-with-bayes_power" class="section level2">
 <h2>Power calculation with <code>bayes_power()</code></h2>
-<p><code>bayes_power(n, h1, h2, m1, m2, sd1=1, sd2=1,   ngroup = NULL, scale = 1000,   bound1 = 1, bound2 = 1/bound1,   datasets = 1000, nsamp = 1000,   seed = NULL)</code></p>
+<p><code>bayes_power(n, h1, h2, m1, m2, sd1=1, sd2=1,   scale = 1000,   bound1 = 1, bound2 = 1/bound1,   datasets = 1000, nsamp = 1000,   seed = 31)</code></p>
 <div id="arguments" class="section level3">
 <h3>Arguments</h3>
 <p><code>n</code> A number. The sample size for which the error probabilities must be computed.</p>
@@ -319,7 +319,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p><code>m2</code> A vector of expected populations means under H2 (standardized). <code>m2</code> must be of same length as <code>m1</code>.</p>
 <p><code>sd1</code> A vector of standard deviations under H1. Must be a single number (equal standard deviation under all populations), or a vector of the same length as <code>m1</code></p>
 <p><code>sd2</code> A vector of standard deviations under H2. Must be a single number (equal standard deviation under all populations), or a vector of the same length as <code>m2</code></p>
-<p><code>ngroup</code> A number or <code>NULL</code> . The number of groups. If <code>NULL</code> the number of groups is determined from the length of <code>m1</code>.</p>
 <p><code>scale</code> A number or use the default <code>1000</code> to set the prior scale.</p>
 <p><code>bound1</code> A number. The boundary above which BF12 favors H1, see below for more details.</p>
 <p><code>bound2</code> A number. The boundary below which BF12 favors H2.</p>
