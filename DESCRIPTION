@@ -2,7 +2,7 @@ Package: BayesianPower
 Type: Package
 Title: Sample Size and Power for Comparing Inequality Constrained
         Hypotheses
-Version: 0.2.2
+Version: 0.2.3
 Author: Fayette Klaassen
 Maintainer: Fayette Klaassen <klaassen.fayette@gmail.com>
 Description: A collection of methods to determine the required sample size for
@@ -19,6 +19,6 @@ RoxygenNote: 7.1.0
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-06-16 07:32:27 UTC; 31643
+Packaged: 2020-06-22 08:07:44 UTC; 31643
 Repository: CRAN
-Date/Publication: 2020-06-16 12:20:06 UTC
+Date/Publication: 2020-06-22 08:40:16 UTC

@@ -1,8 +1,8 @@
-509d4f10c36d367e3efb60d2729661ac *DESCRIPTION
+0c0900801882021feb9a7f5fba7a1053 *DESCRIPTION
 8107397754d7ba65a78190b02a8c8dc8 *NAMESPACE
-6a7f9abd1d52a66961f55005fd04c529 *NEWS.md
-7611c0ae6345062d203cf0b248ed718f *R/power_sampsize.R
-7e42fe22dd8da67f81187c177d696e84 *R/utils.R
+a7fbe6e0b2f86e4c0c995e06a9e10cf1 *NEWS.md
+aa842e1ac4e4b340cd28abea28570d96 *R/power_sampsize.R
+d878aadde0c23be5f446d081e6931adb *R/utils.R
 f8fdf57138d64cfed7f53b49d3ae0880 *build/vignette.rds
 37db0235dde4d34d38e5e55fb0631ded *inst/doc/bayesianpower.R
 8eb71558e7bc6f1c273adf80d7c1b2ca *inst/doc/bayesianpower.Rmd
